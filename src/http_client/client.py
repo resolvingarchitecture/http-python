@@ -30,7 +30,13 @@ from ra_common.envelope import (
 _LOG = logging.getLogger(__name__)
 
 DEFAULT_REQUEST_TIMEOUT = 30.0
-DEFAULT_USER_AGENT = "ra-http-client"
+# Not "ra-http-client": a project-identifying default is itself a fingerprinting leak - it
+# tells every destination (and any on-path observer, for plain HTTP) exactly which library,
+# and by extension which project, made the request, narrowing the anonymity set to whoever
+# else runs this exact software. A generic, widely-shared value instead, same principle Tor
+# Browser uses (every user presents an identical, unremarkable fingerprint) - see DESIGN.md
+# "Identity metadata leaks".
+DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
 
 _PASSTHROUGH_HEADERS = (
     HEADER_AUTHORIZATION,

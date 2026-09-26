@@ -55,6 +55,36 @@ tracking. `ra_common` (Python) has no such type yet (only `Network` /
 here is logged and recorded as an `Envelope` error message only. Upgrade
 this once `ra_common` gets a report type worth building one against.
 
+## Identity metadata leaks
+
+Required standard for any HTTP client this project relies on for anonymized
+traffic (Tor/I2P), enforced here and checked against every sibling
+`http-client-*` port: no default header, response header, or connection
+behavior may reveal more about the requester than it has to.
+
+- **Fixed 2026-09-26**: `DEFAULT_USER_AGENT` was the project-identifying
+  literal `"ra-http-client"`. A bespoke value defeats Tor Browser's entire
+  fingerprinting defense (every user presenting an *identical* signature)
+  even though it reveals nothing else - now a generic, widely-shared
+  browser value instead. The equivalent bug was found and fixed the same
+  day in `http-client-java` (OkHttp's default `User-Agent: okhttp/<version>`,
+  confirmed by disassembling its actual bytecode) and `http-client-cpp`
+  (the same literal `"ra-http-client"` default).
+- **Open, not yet checked**: does `http.client`'s CONNECT-proxy path (see
+  `README.md`'s proxy config note and `TODO.md`'s SOCKS5 item) resolve the
+  destination hostname locally before or instead of handing it to the
+  proxy? A local resolution would leak the destination outside the
+  proxy entirely - the same class of bug found and fixed in
+  `bitcoin-client-java`'s bitcoinj DNS-seed lookups (`tor-client-java`,
+  2026-09-25). Moot until this client speaks real SOCKS5 (see the proxy gap
+  noted in `README.md`/`TODO.md`), since it can't reach `TorSocksRelay` at
+  all today - but verify both together when SOCKS5 support is added, not
+  DNS-safety alone.
+- **No server/inbound half** (see "Scope: client only" above), so the third
+  known leak shape - a server-identifying response header, found and fixed
+  in `http-client-java`'s Jetty listener (`Server: Jetty(<version>)`) -
+  doesn't apply yet. Check for it if one is ever added.
+
 ## TLS: stdlib `ssl`, no third-party dependency
 
 `ssl.create_default_context()` (real verification) or

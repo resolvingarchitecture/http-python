@@ -30,7 +30,7 @@ client.send(env)                                # response body -> env.content()
 | `ra.http.client.trustallcerts` | `false` | skip TLS certificate verification (test-only) |
 | `ra.http.client.proxyHost` / `proxyPort` | unset | HTTP CONNECT / plain-HTTP proxy |
 | `ra.http.client.requestTimeoutSecs` | `30` | per-request timeout |
-| `ra.http.client.userAgent` | `ra-http-client` | default `User-Agent`, overridden by an `Envelope` header |
+| `ra.http.client.userAgent` | a generic, widely-shared browser value | default `User-Agent`, overridden by an `Envelope` header |
 
 ## Build
 
@@ -40,6 +40,21 @@ python3.13 -m venv .venv
 .venv/bin/pip install -e '.[test]'
 .venv/bin/pytest
 ```
+
+## Identity metadata leaks
+
+Checked and fixed (2026-09-26), the same class of bug found and fixed in
+`http-client-java`'s OkHttp-based client: `DEFAULT_USER_AGENT` used to be
+the literal string `"ra-http-client"` - itself a fingerprinting leak (it
+identifies exactly which project made the request, an even smaller
+anonymity set than a generic library name). Now a generic, widely-shared
+browser value instead - same principle Tor Browser uses (every user
+presents an identical, unremarkable fingerprint). See `DESIGN.md` "Identity
+metadata leaks" for the full requirement, including one still-open check:
+this client's proxy support is plain HTTP CONNECT, not SOCKS5, so it cannot
+yet correctly reach a SOCKS5-only relay like `tor-client-java`'s
+`TorSocksRelay` at all (a functional gap, not a metadata leak, but one that
+must be closed before this client is trusted to route anything over Tor).
 
 ## Status
 
