@@ -11,7 +11,7 @@
       (currently only a plain CONNECT/HTTP proxy is implemented; see
       `client.py`'s `_request`). Once added, verify (don't assume) that the
       destination hostname is sent as a SOCKS5 domain-name request, not
-      resolved via local DNS first - `http-client-cpp`'s
+      resolved via local DNS first - `http-cpp`'s
       `ConnectThroughSocks5` is the reference for what "done right" looks
       like; `bitcoin-client-java`'s bitcoinj DNS-seed bug (fixed
       2026-09-25) is what "done wrong" costs.

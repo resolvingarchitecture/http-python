@@ -2,7 +2,7 @@
 
 ## Scope: client only
 
-`http-client-java`'s `ra.http.HTTPService` is two things bolted together:
+`http-java`'s `ra.http.HTTPService` is two things bolted together:
 an outbound `sendOut` (an HTTP/HTTPS client), and a Jetty-based inbound
 server (`launch()`, `EnvelopeHandler`, `SPAHandler`, `EnvelopeWebSocket`,
 `EnvelopeJSONDataHandler`) for hosting Envelope-JSON APIs, SPAs, and
@@ -59,7 +59,7 @@ this once `ra_common` gets a report type worth building one against.
 
 Required standard for any HTTP client this project relies on for anonymized
 traffic (Tor/I2P), enforced here and checked against every sibling
-`http-client-*` port: no default header, response header, or connection
+`http-*` port: no default header, response header, or connection
 behavior may reveal more about the requester than it has to.
 
 - **Fixed 2026-09-26**: `DEFAULT_USER_AGENT` was the project-identifying
@@ -67,8 +67,8 @@ behavior may reveal more about the requester than it has to.
   fingerprinting defense (every user presenting an *identical* signature)
   even though it reveals nothing else - now a generic, widely-shared
   browser value instead. The equivalent bug was found and fixed the same
-  day in `http-client-java` (OkHttp's default `User-Agent: okhttp/<version>`,
-  confirmed by disassembling its actual bytecode) and `http-client-cpp`
+  day in `http-java` (OkHttp's default `User-Agent: okhttp/<version>`,
+  confirmed by disassembling its actual bytecode) and `http-cpp`
   (the same literal `"ra-http-client"` default).
 - **Open, not yet checked**: does `http.client`'s CONNECT-proxy path (see
   `README.md`'s proxy config note and `TODO.md`'s SOCKS5 item) resolve the
@@ -82,7 +82,7 @@ behavior may reveal more about the requester than it has to.
   DNS-safety alone.
 - **No server/inbound half** (see "Scope: client only" above), so the third
   known leak shape - a server-identifying response header, found and fixed
-  in `http-client-java`'s Jetty listener (`Server: Jetty(<version>)`) -
+  in `http-java`'s Jetty listener (`Server: Jetty(<version>)`) -
   doesn't apply yet. Check for it if one is ever added.
 
 ## TLS: stdlib `ssl`, no third-party dependency

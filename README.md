@@ -1,8 +1,8 @@
-# http-client (Python)
+# http (Python)
 
 A direct (non-anonymized) HTTP/HTTPS client for **1M5**.
 
-A Python port of [`http-client-java`](https://github.com/resolvingarchitecture/http-client-java)'s
+A Python port of [`http-java`](https://github.com/resolvingarchitecture/http-java)'s
 outbound path (`ra.http.HTTPService.sendOut`). That class's other half - a
 Jetty-based local server for hosting Envelope-JSON APIs / SPAs / WebSockets,
 used e.g. by `tor-client-java` to serve a Tor hidden service - has no port
@@ -12,7 +12,7 @@ here; see `DESIGN.md`.
 
 ```python
 from ra_common.envelope import Action, Envelope
-from http_client import HttpClient
+from ra_http import HttpClient
 
 client = HttpClient.from_config({})
 client.start()                                 # nothing to dial in advance - always True
@@ -44,7 +44,7 @@ python3.13 -m venv .venv
 ## Identity metadata leaks
 
 Checked and fixed (2026-09-26), the same class of bug found and fixed in
-`http-client-java`'s OkHttp-based client: `DEFAULT_USER_AGENT` used to be
+`http-java`'s OkHttp-based client: `DEFAULT_USER_AGENT` used to be
 the literal string `"ra-http-client"` - itself a fingerprinting leak (it
 identifies exactly which project made the request, an even smaller
 anonymity set than a generic library name). Now a generic, widely-shared

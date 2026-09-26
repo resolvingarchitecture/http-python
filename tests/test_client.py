@@ -6,8 +6,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import pytest
 from ra_common.envelope import Action, Envelope
 
-from http_client import HttpClient, Status
-from http_client.client import _parse_url
+from ra_http import HttpClient, Status
+from ra_http.client import _parse_url
 
 
 def test_parse_url_with_path_and_query():
