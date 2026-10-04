@@ -151,7 +151,7 @@ class TestLiveNetwork:
         client = HttpClient.from_config({})
         assert client.start() is True
         env = Envelope.document()
-        env.url = "http://resolvingarchitecture.io"
+        env.url = "http://resolvingarchitecture.dev"
         env.action = Action.GET
         try:
             ok = client.send(env)
@@ -166,7 +166,7 @@ class TestLiveNetwork:
         client = HttpClient.from_config({})
         assert client.start() is True
         env = Envelope.document()
-        env.url = "https://resolvingarchitecture.io"
+        env.url = "https://resolvingarchitecture.dev"
         env.action = Action.GET
         try:
             ok = client.send(env)
